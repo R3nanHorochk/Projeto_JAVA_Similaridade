@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class Documento {
     protected String arquivo;
+    protectded int frequencia;
 
     protected String[] stopWords = {
         "a", "à", "ao", "aos", "as", "às", "o", "os",
@@ -64,6 +65,7 @@ public class Documento {
     // constructors
     public Documento(String arquivo) {
         this.arquivo = arquivo;
+        
     }
 
     public Documento() {
