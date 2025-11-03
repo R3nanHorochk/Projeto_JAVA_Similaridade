@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 public class Documento {
     protected String arquivo;
-
+    protected Hash hashtable;
+    protected Hash stopWordsHash;
     protected String[] stopWords = {
         "a", "à", "ao", "aos", "as", "às", "o", "os",
         "um", "uma", "uns", "umas",
@@ -64,10 +65,17 @@ public class Documento {
     // constructors
     public Documento(String arquivo) {
         this.arquivo = arquivo;
+        stopWordsStart();
     }
 
     public Documento() {
         this(null);
+        stopWordsStart();
+    }
+    private void stopWordsStart() {
+    	for(int i = 0; i < stopWords.length ; i++) {
+    		stopWordsHash.Inserir(stopWords[i]);
+    	}
     }
 
     // --------------------------- methods ------------------------------------
@@ -96,7 +104,7 @@ public class Documento {
         StringBuilder conteudo = new StringBuilder();
         String[] words;
         List<String> filteredWords = new LinkedList<>();
-
+        Node ndStop;
         try (Scanner scanner = new Scanner(new File(filePath))) {
             while (scanner.hasNextLine()) {
                 conteudo.append(scanner.nextLine()).append(" ");
@@ -119,16 +127,16 @@ public class Documento {
                 if (word.isEmpty()) {
                     continue;
                 }
+                
                 boolean isStopWord = false;
-                for (String stopWord :  stopWords) {
-                    if (word.equals(stopWord)) {
-                        isStopWord = true;
-                        break;
-                    } 
+                ndStop = stopWordsHash.buscar(word);
+                if (ndStop != null) {
+                	isStopWord = true;
                 }
                 if(!isStopWord && !word.isEmpty()) {
                     filteredWords.add(word);
                 }
+                ndStop = null;
             }
 
             return filteredWords;
