@@ -1,4 +1,4 @@
-package br.com.rha;
+package rha;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,7 +62,6 @@ public class Documento {
         "mesmo", "mesma", "mesmos", "mesmas"
     };
 
-    // constructors
     public Documento(String arquivo) {
         this.arquivo = arquivo;
         this.hashtable = new Hash(26);
@@ -97,9 +96,10 @@ public class Documento {
 
     }
 
-    public void wordFrequency(String filePath) {
+    public Hash wordFrequency(String filePath) {
     	List<String> wordsNormalized = normalizeFile(filePath);
         wordFrequencyFile(wordsNormalized);
+        return hashtable ;
     }
 
     // NORMALIZA 1 ARQUIVO

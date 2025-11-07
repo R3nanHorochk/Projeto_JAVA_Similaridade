@@ -7,11 +7,12 @@ public class Hash {
 	
 	public void Inserir(String word) {
 		int intKey = stringToIntHash(word);
-
+		
 		int indice = func_hash(intKey);
+		WordData wd = new WordData(word,indice,1);
 
-		if(!existsKey(intKey)) {
-			Hashes[indice].insert_ALV(intKey);
+		if(!existsKey(word)) {
+			Hashes[indice].insert_ALV(wd);
 		} else {
 			// somo mais um nela
 		}
@@ -26,21 +27,20 @@ public class Hash {
 
 	// calculando hash de uma String
 	private int stringToIntHash(String word) {
-		/*
-		 * Metodo responsavel por transformar uma string em uma key de inteiro
-		 * dessa forma podemos calcular o hash
-		 */
-
+		
 		int p = 31;
 
-		long hashValue = 0;
+		int hashValue = 0;
 
 		// calculando o valor polinomial
 		for (int i = 0; i < word.length(); i++) {
 			hashValue = (hashValue * p) + word.charAt(i);
+			System.out.println("CHAR:" + word.charAt(i) + " valor:" + hashValue);
 		}
-
-		return (int) (hashValue > 0 ? hashValue : -hashValue);
+		System.out.println("HASH VALUE:" + hashValue);
+		System.out.println("HASH VALUE2:" + (hashValue > 0 ? hashValue : -hashValue));
+		System.out.println("HASH VALUE2:" +  (hashValue > 0 ? hashValue : -hashValue));
+		return  (hashValue > 0 ? hashValue : -hashValue);
 	}
 	
 	public Hash(int tamanho) {
@@ -53,21 +53,27 @@ public class Hash {
 	// metodo de dispersao da MULTIPLICACAO
 	private int func_hash(int chave) {
 		double A = 0.6180339887;
+		System.out.println(Hashes.length + " - " + chave );
 		return (int)(Hashes.length * (chave * A % 1));
+		
 	}
 
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
-
+		System.out.println(intKey);
         int indice = func_hash(intKey);
-        return Hashes[indice].search(intKey);
+        System.out.println(indice + " - " + word + " - " + intKey);
+        WordData wd = new WordData(word,indice);
+        System.out.println( " --------------- ");
+        return Hashes[indice].search(wd);
+       
     }
 
     public void remover(String word) {
 		int intKey = stringToIntHash(word);
-
         int indice = func_hash(intKey);
-        Hashes[indice].remove_ALV(intKey);
+        WordData wd = new WordData(word,indice);
+        Hashes[indice].remove_ALV(wd);
     }
 
 	//TODO: implementar os metodos insertFrequency e updateFrequency

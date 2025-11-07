@@ -16,13 +16,9 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		String str = "Hello World Hello";
-		String[] words = str.split(" ");
-		int tamanho = words.length;
-		int i2 = 0;
-		for(int i = 0 ; i < tamanho ; i++) {
-			i2 = charactere(words[i]);
-		}
+		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/rha/teste.txt");
+		Hash h2 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/rha/teste.txt" ) ;
+		System.out.println(h2);
 		
 	}
 

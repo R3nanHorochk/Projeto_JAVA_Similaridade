@@ -18,6 +18,7 @@
 
 package rha;
 
+
 public class BST extends BinaryTree {
 
 	public BST() {
@@ -27,17 +28,29 @@ public class BST extends BinaryTree {
 	public BST(Node root) {
 		super(root);
 	}
+	
+	  int string_int(String palavra) {
+			int sum = 0;
+			int word = 0;
+			for(int i = 0; i < palavra.length(); i++) {
+				word = palavra.charAt(i);
+				sum += word;
+				
+			}
+			return sum;
+		}
 
-	public Node search(int data) {
+	
+	public Node search(WordData data) {
 		return search(root, data);
 	}
 
-	private Node search(Node node, int data) {
+	private Node search(Node node, WordData data) {
 		if (node == null) {
 			return null;
 		}
 		
-		int diff = data - node.getData();
+		int diff = string_int(data.getWord()) - string_int(node.getData().getWord());
 
 		if (diff < 0) {
 			return search(node.getLeft(), data);
@@ -48,40 +61,40 @@ public class BST extends BinaryTree {
 		}
 	}
 	
-	public void insert(int data) {
+	public void insert(WordData data) {
 		root = insert(root, null, data);
 	}
 	
-	protected Node insert(Node node, Node parent, int data) {
+	protected Node insert(Node node, Node parent, WordData data) {
 		if (node == null) {
 			return new Node(data, parent);
 		}
 
-		int diff = data - node.getData();
-		
+		int diff = Integer.parseInt(data.getWord()) - Integer.parseInt(node.getData().getWord());
+
 		if (diff < 0) {
 			node.setLeft(insert(node.getLeft(), node, data));
 		} else if (diff > 0) {
 			node.setRight(insert(node.getRight(), node, data));
 		} else {
-			node.setFrequencia((node.getFrequencia() + 1));
+			node.getData().setFrequency((node.getData().getFrequency() + 1));
 		}
 		
 		return node;
 	}
 	
-	public void remove(int data) {
+	public void remove(WordData data) {
 		root = remove(root, data);
 	}
 	
-	protected Node remove(Node node, int data) {
+	protected Node remove(Node node, WordData data) {
 		if (node == null) {
 			//return null;
 			throw new RuntimeException("Nó com chave " + data + " não existe na BST!");
 		}
 		
-		int diff = data - node.getData();
-				
+		int diff = string_int(data.getWord()) - string_int(node.getData().getWord());
+	
 		if (diff < 0) {
 			node.setLeft(remove(node.getLeft(), data));
 		} else if (diff > 0) {
@@ -141,7 +154,7 @@ public class BST extends BinaryTree {
 		return node;
 	}
 	
-	public Node findPredecessor(int data) {
+	public Node findPredecessor(WordData data) {
 		Node node = search(data);
 		return predecessor(node);
 	}
@@ -166,7 +179,7 @@ public class BST extends BinaryTree {
 		}
 	}
 	
-	public Node findSuccessor(int data) {
+	public Node findSuccessor(WordData data) {
 		Node node = search(data);
 		return successor(node);		
 	}

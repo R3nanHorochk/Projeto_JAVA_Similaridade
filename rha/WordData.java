@@ -1,7 +1,4 @@
-
-/*
- * Classe dedicada para armazenar as informacoes de data no no da AVL
- */
+package rha;
 
 public class WordData {
     protected String word;
@@ -14,6 +11,11 @@ public class WordData {
         this.word = word;
         this.hash = hash;
         this.frequency = frequency;
+    }
+    public WordData(String word, int hash ) {
+        this.word = word;
+        this.hash = hash;
+        this.frequency = 0;
     }
 
     public WordData() {
