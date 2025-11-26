@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class Documento {
     protected String arquivo;
-    protectded int frequencia;
-
+    protected Hash hashtable;
+    protected Hash stopWordsHash;
     protected String[] stopWords = {
         "a", "à", "ao", "aos", "as", "às", "o", "os",
         "um", "uma", "uns", "umas",
@@ -62,35 +62,44 @@ public class Documento {
         "mesmo", "mesma", "mesmos", "mesmas"
     };
 
-    // constructors
     public Documento(String arquivo) {
         this.arquivo = arquivo;
-        
+        this.hashtable = new Hash(26);
+        this.stopWordsHash = new Hash(26);
+        stopWordsStart();
     }
 
     public Documento() {
         this(null);
+        stopWordsStart();
     }
-
+    private void stopWordsStart() {
+    	for(int i = 0; i < stopWords.length ; i++) {
+    		stopWordsHash.Inserir(stopWords[i]);
+    	}
+    }
     // --------------------------- methods ------------------------------------
     // calcula a frequencia de palavras com uma hash interna
     private void wordFrequencyFile(List<String> wordsNormalized) {
         Hash wordsFrequency = new Hash(26);
         
         for(String word : wordsNormalized) {
-            int frequency = wordsFrequency.searchFrequency(word);
-
-            if (frequency > 0) {
-                wordsFrequency.updateFrequency(word, frequency + 1);
+            Node node = hashtable.buscar(word);
+            if (node != null) {
+                int freq = node.getData().getFrequency();
+                node.getData().setFrequency(freq + 1);
             } else {
-                wordsFrequency.insertFrequency(word, 1);
+                
+                hashtable.Inserir(word);
             }
         }
 
     }
 
-    public void wordFrequency(String filePath) {
-        wordFrequencyFile(filePath);
+    public Hash wordFrequency(String filePath) {
+    	List<String> wordsNormalized = normalizeFile(filePath);
+        wordFrequencyFile(wordsNormalized);
+        return hashtable ;
     }
 
     // NORMALIZA 1 ARQUIVO
@@ -98,7 +107,7 @@ public class Documento {
         StringBuilder conteudo = new StringBuilder();
         String[] words;
         List<String> filteredWords = new LinkedList<>();
-
+        Node ndStop;
         try (Scanner scanner = new Scanner(new File(filePath))) {
             while (scanner.hasNextLine()) {
                 conteudo.append(scanner.nextLine()).append(" ");
@@ -115,22 +124,22 @@ public class Documento {
             text = text.replaceAll("[^a-zà-ú\\s]", " ");
 
             words = text.trim().split("\\s+");
-
+            
             // Normalize text O(n * T) onde n tamanho arquivo e T tamanho vetor stopWords
             for (String word : words) {
                 if (word.isEmpty()) {
                     continue;
                 }
                 boolean isStopWord = false;
-                for (String stopWord :  stopWords) {
-                    if (word.equals(stopWord)) {
-                        isStopWord = true;
-                        break;
-                    } 
+                ndStop = stopWordsHash.buscar(word);
+                if (ndStop != null) {
+                	isStopWord = true;
                 }
+                
                 if(!isStopWord && !word.isEmpty()) {
                     filteredWords.add(word);
                 }
+                ndStop = null;
             }
 
             return filteredWords;

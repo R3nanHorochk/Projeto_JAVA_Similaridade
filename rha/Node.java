@@ -158,7 +158,7 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "dado: " + data
+		return "dado: " + data.getFrequency() +" - " + data.getWord()
 				+ ", pai: " + (parent != null ? parent.getKey() : "null")
 				+ ", esq: " + (left != null ? left.getKey() : "null")
 				+ ", dir: " + (right != null ? right.getKey() : "null")

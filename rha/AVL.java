@@ -132,11 +132,14 @@ public class AVL extends BST {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString() { if(!isEmpty()) {
 		return "AVL - isEmpty(): " + isEmpty()
 				+ ", getDegree(): " + getDegree()
 				+ ", getHeight(): " + getHeight()
-				+ ", root => { " + root + " }";				
+				+ ", root => { " + root + " }";	
+	}else {
+		return "A";
+	}
 	}
 	public int getBalance(Node no) {
 		
@@ -167,16 +170,16 @@ public class AVL extends BST {
 		return no;
 	}
 	
-	public void insert_ALV(int data) {
+	public void insert_ALV(WordData data) {
 		 root = insert_ALV(root, null, data);
 	}
 	
-	protected Node insert_ALV(Node node, Node parent, int data) {
+	protected Node insert_ALV(Node node, Node parent, WordData data) {
 	    if (node == null) {
 	        return new Node(data, parent);
 	    }
 
-	    int diff = data - node.getData();
+	    int diff = string_int(data.getWord()) - string_int(node.getData().getWord());
 
 	    if (diff < 0) {
 	        node.setLeft(insert_ALV(node.getLeft(), node, data));
@@ -185,22 +188,21 @@ public class AVL extends BST {
 	    } else {
 	        throw new RuntimeException("Essa BST não pode ter duplicatas!");
 	    }
-	    System.out.println(node.getData() + node.getHeight() + " altura \n");
 	    Node balanced = CheckBalance(node);
 	    return balanced;
 	}
 	
 	
-	public void remove_ALV(int data) {
+	public void remove_ALV(WordData data) {
 		root = remove_ALV(root, null, data);
 	}
 	
-	protected Node remove_ALV(Node node, Node parent, int data) {
+	protected Node remove_ALV(Node node, Node parent, WordData data) {
 		if (node == null) {
 			return null;
 		}
 
-		int diff = data - node.getData();
+		int diff = Integer.parseInt(data.getWord()) - Integer.parseInt(node.getData().getWord());
 		
 		if (diff < 0) {
 			node.setLeft(remove_ALV(node.getLeft(), node, data));
