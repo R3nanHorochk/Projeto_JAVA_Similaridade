@@ -16,9 +16,16 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/rha/teste.txt");
-		Hash h2 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/rha/teste.txt" ) ;
-		System.out.println(h2);
+		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt");
+		Hash h1 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt" ) ;
+		//System.out.println(h1);
+
+		Documento d2 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt");
+		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt" ) ;
+		//System.out.println(h2);
+
+		double similarity = CompareTo.cosineSimilarity(h1, h2);
+        System.out.printf("Similaridade: %.2f%%\n", similarity);
 		
 	}
 
