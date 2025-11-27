@@ -1,4 +1,9 @@
 package rha;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 
 public class Main {
 	private static int func_hash(int chave) {

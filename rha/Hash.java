@@ -1,8 +1,8 @@
 package rha;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
-
+import java.util.List;
+import java.util.ArrayList;
 public class Hash {
 	private AVL[] Hashes;
 	
@@ -77,19 +77,20 @@ public class Hash {
         Hashes[indice].remove_ALV(wd);
     }
 
-	//TODO: implementar os metodos insertFrequency e updateFrequency
 
-	/**
-	 * Itera sobre todas as palavras armazenadas em todas as árvores AVL
-	 * @param consumer Função que será aplicada a cada WordData encontrado
-	 */
-	public void forEachWord(Consumer<WordData> consumer) {
-		for (int i = 0; i < Hashes.length; i++) {
-			if (Hashes[i] != null && !Hashes[i].isEmpty()) {
-				Hashes[i].forEachWord(consumer);
-			}
-		}
-	}
+	public List<WordData> getAllWordData() {
+    List<WordData> result = new ArrayList<>();
+
+    for (AVL tree : Hashes) {
+        if (tree != null && !tree.isEmpty()) {
+            result.addAll(tree.getAllData());
+        }
+    }
+
+    return result;
+}
+
+	//TODO: implementar os metodos insertFrequency e updateFrequency
 
 	@Override
 	public String toString() {
