@@ -1,1 +1,5 @@
-dados estruturados são essenciais para a ciência
+A fotossíntese é o processo físico-químico pelo qual as plantas, algas e certas bactérias utilizam a energia da luz solar para produzir compostos orgânicos. Fundamental para a vida na Terra, a fotossíntese é a principal fonte de oxigênio na atmosfera. O processo ocorre principalmente nas folhas das plantas, dentro de organelas especializadas chamadas cloroplastos, que contêm a clorofila, o pigmento responsável pela cor verde.
+
+A equação química geral da fotossíntese envolve a absorção de dióxido de carbono e água que, na presença de luz, são convertidos em glicose e oxigênio. A glicose produzida serve como combustível para as células da planta, permitindo seu crescimento e desenvolvimento, enquanto o oxigênio é liberado como um subproduto essencial para a respiração de quase todos os seres vivos.
+
+Existem duas etapas principais na fotossíntese: a fase clara (dependente da luz) e a fase escura (independente da luz, também conhecida como Ciclo de Calvin). Na fase clara, a energia solar é capturada e armazenada em moléculas de ATP. Na fase escura, essa energia armazenada é utilizada para fixar o carbono e sintetizar os açúcares. Sem esse processo, a cadeia alimentar entraria em colapso.
