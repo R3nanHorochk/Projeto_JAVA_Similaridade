@@ -1,31 +1,37 @@
 package rha;
 import java.util.*;
-
+import java.util.List;
+import java.util.ArrayList;
 public class CompareTo {
-    // Constrói listas de palavras únicas e frequências a partir da hash do documento
-    private static void extractWords(Hash hash, List<String> uniqueWords, List<Integer> frequencies) {
-        // Aqui usamos um método público que percorre todos os nós
-        hash.forEachWord(wd -> {
-            uniqueWords.add(wd.getWord());
-            frequencies.add(wd.getFrequency());
-        });
+   
+    public static int findFrequency(List<WordData> list, String word) {
+    for (WordData wd : list) {
+        if (wd.getWord().equals(word)) {
+            return wd.getFrequency();
+        }
+    }
+    return 0; // não encontrou
     }
 
-    private static double cosineSimilarity(List<String> words1, List<Integer> freq1,
-                                           List<String> words2, List<Integer> freq2) {
+    public static double cosineSimilarity(List<WordData> words1, List<WordData> words2) {
         Set<String> allWordsSet = new HashSet<>();
-        allWordsSet.addAll(words1);
-        allWordsSet.addAll(words2);
+        for(int i = 0 ; i < words1.size() ; i++){
+            allWordsSet.add(words1.get(i).getWord());
+        }
+
+        for(int i = 0 ; i < words2.size() ; i++){
+            allWordsSet.add(words2.get(i).getWord());
+        }
         List<String> allWords = new ArrayList<>(allWordsSet);
 
         List<Integer> vec1 = new ArrayList<>();
         List<Integer> vec2 = new ArrayList<>();
 
         for (String w : allWords) {
-            int i1 = words1.indexOf(w);
-            int i2 = words2.indexOf(w);
-            vec1.add(i1 != -1 ? freq1.get(i1) : 0);
-            vec2.add(i2 != -1 ? freq2.get(i2) : 0);
+            int i1 = findFrequency(words1,w);
+            int i2 = findFrequency(words2,w);
+            vec1.add(i1 != -1 ? i1 : 0);
+            vec2.add(i2 != -1 ? i2 : 0);
         }
 
         double dot = 0, norm1 = 0, norm2 = 0;
