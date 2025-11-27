@@ -11,6 +11,24 @@ public class CompareTo {
         });
     }
 
+    /**
+     * Calcula a similaridade de cosseno entre dois documentos representados por suas tabelas hash
+     * @param hash1 Tabela hash do primeiro documento
+     * @param hash2 Tabela hash do segundo documento
+     * @return Valor da similaridade de cosseno entre 0.0 e 1.0
+     */
+    public static double cosineSimilarity(Hash hash1, Hash hash2) {
+        List<String> words1 = new ArrayList<>();
+        List<Integer> freq1 = new ArrayList<>();
+        List<String> words2 = new ArrayList<>();
+        List<Integer> freq2 = new ArrayList<>();
+        
+        extractWords(hash1, words1, freq1);
+        extractWords(hash2, words2, freq2);
+        
+        return cosineSimilarity(words1, freq1, words2, freq2);
+    }
+
     private static double cosineSimilarity(List<String> words1, List<Integer> freq1,
                                            List<String> words2, List<Integer> freq2) {
         Set<String> allWordsSet = new HashSet<>();

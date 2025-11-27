@@ -22,6 +22,7 @@ package rha;
 // imports para a fila usada na levelOrderTraversal(). 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 public class BinaryTree {
 
@@ -182,6 +183,29 @@ public class BinaryTree {
 			sb.append("├─» esq null\n");
 		}
 		inReversedOrderAscii(sb, node.getLeft());
+	}
+
+	/**
+	 * Percorre a árvore em ordem (in-order) aplicando o consumer a cada WordData
+	 * @param consumer Função que será aplicada a cada WordData encontrado
+	 */
+	public void forEachWord(Consumer<WordData> consumer) {
+		forEachWordInOrder(root, consumer);
+	}
+
+	/**
+	 * Método auxiliar recursivo que percorre a árvore em ordem
+	 * @param node Nó atual
+	 * @param consumer Função que será aplicada a cada WordData encontrado
+	 */
+	private void forEachWordInOrder(Node node, Consumer<WordData> consumer) {
+		if (node == null) {
+			return;
+		}
+		// Percurso in-order: esquerda, nó atual, direita
+		forEachWordInOrder(node.getLeft(), consumer);
+		consumer.accept(node.getData());
+		forEachWordInOrder(node.getRight(), consumer);
 	}
 
 	@Override
