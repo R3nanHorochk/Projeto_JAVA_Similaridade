@@ -94,6 +94,10 @@ public class Main {
         List<Hash> hashes = new ArrayList<>();
         List<Hash> hashes2 = new ArrayList<>();
         List<String> nomesArquivos = new ArrayList<>();
+        int[] comparaDiv = new int[arquivos.length];
+        int[] comparaMult = new int[arquivos.length];
+        String[] compArq = new String[arquivos.length];
+        int icount = 0;
         int colisaoMult = 0;
         int colisaoDiv = 0;
         for (File arquivo : arquivos) {
@@ -103,7 +107,9 @@ public class Main {
             Hash hash = doc.wordFrequency(caminho,true);
              
             Hash hash2 = doc2.wordFrequency(caminho,false);
-
+            comparaMult[icount] = hash.getTotalColisoes();
+            comparaDiv[icount] = hash2.getTotalColisoes();
+            compArq[icount] = caminho;
             int teste = doc.Col(caminho,true);
             int teste2 = doc.Col(caminho,false);
             colisaoMult = colisaoMult + hash.getTotalColisoes() ; 
@@ -113,7 +119,7 @@ public class Main {
             hash.setMult(false);
             hashes2.add(hash2);
             nomesArquivos.add(arquivo.getName());
-
+            icount++;
         }
         
         // Calcula similaridade entre todos os pares
@@ -181,8 +187,15 @@ public class Main {
             alvRESULT.printTop(limite);
             alvRESULT.printTreeR();
             System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println(" Colisoes :" + comparaMult[j] + " \n ");
+            }
             System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
-
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println(" Colisoes :" + comparaDiv[j] + " \n ");
+            }
         } else if (modo.equals("busca")) {
             saida.append("Modo: Busca Específica (").append(arquivoBusca1)
                  .append(" e ").append(arquivoBusca2).append(")\n");
@@ -207,7 +220,15 @@ public class Main {
             System.out.println("\n=== PRINT AVL ===\n");
             alvRESULT.printTreeR();
             System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println("Colisoes :" + comparaMult[j] + " \n ");
+            }
             System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println("Colisoes :" + comparaDiv[j] + " \n " );
+            }
             if (!encontrado) {
                 saida.append("Par não encontrado.\n\n");
             }
@@ -232,7 +253,15 @@ public class Main {
             System.out.println("\n=== PRINT AVL ===\n");
              alvRESULT.printTreeR();
              System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println(" Colisoes :" + comparaMult[j] + " \n ");
+            }
             System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
+            for(int j = 0; j < arquivos.length;j++){
+                System.out.println("\n Colisoes no arquivo:" + compArq[j]);
+                System.out.println(" Colisoes :" + comparaDiv[j] + " \n ");
+            }
             if (!encontrouParesAcimaLimiar) {
                 saida.append("Nenhum par acima do limiar.\n\n");
             }
