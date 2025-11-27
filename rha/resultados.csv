@@ -1,0 +1,4 @@
+Arquivo 1,Arquivo 2,Similaridade
+doc2.txt,doc4.txt,1.0000
+doc1.txt,doc2.txt,0.4000
+doc1.txt,doc4.txt,0.4000
