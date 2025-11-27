@@ -198,8 +198,10 @@ public void setColisaoCount(int colisaoCount) {
 	    int diff = string_int(data.getWord()) - string_int(node.getData().getWord());
 
 	    if (diff < 0) {
+			 colisaoCount = colisaoCount + 1;
 	        node.setLeft(insert_ALV(node.getLeft(), node, data));
 	    } else if (diff > 0) {
+			 colisaoCount = colisaoCount + 1;
 	        node.setRight(insert_ALV(node.getRight(), node, data));
 	    } else {
 	        throw new RuntimeException("Essa BST não pode ter duplicatas!");

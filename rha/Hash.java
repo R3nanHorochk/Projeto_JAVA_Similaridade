@@ -6,15 +6,19 @@ import java.util.ArrayList;
 public class Hash {
 	private AVL[] Hashes;
 	private boolean Mult = true;
-	
+	private int colisaoCountT = 0;
 	public void Inserir(String word) {
 		int intKey = stringToIntHash(word);
 		
 		int indice = func_hash(intKey);
 		WordData wd = new WordData(word,indice,1);
-
+		if(this.Hashes[indice] != null){
+			colisaoCountT = colisaoCountT + 1;
+		}
 		if(!existsKey(word)) {
+			
 			Hashes[indice].insert_ALV(wd);
+			
 		} else {
 			// somo mais um nela
 		}
@@ -78,16 +82,7 @@ public class Hash {
     }
 
 	public int getTotalColisoes() {
-    int total = 0;
-
-    for (AVL avl : this.Hashes) {
-        if (avl != null) {
-            total = total + avl.getColisaoCount();  // soma as colisões de cada AVL
-			total = total + 1;
-        }
-    }
-
-    return total;
+    return this.colisaoCountT;
 	}
 
     public void remover(String word) {
