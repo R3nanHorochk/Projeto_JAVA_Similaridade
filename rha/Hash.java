@@ -36,11 +36,8 @@ public class Hash {
 		// calculando o valor polinomial
 		for (int i = 0; i < word.length(); i++) {
 			hashValue = (hashValue * p) + word.charAt(i);
-			System.out.println("CHAR:" + word.charAt(i) + " valor:" + hashValue);
+			
 		}
-		System.out.println("HASH VALUE:" + hashValue);
-		System.out.println("HASH VALUE2:" + (hashValue > 0 ? hashValue : -hashValue));
-		System.out.println("HASH VALUE2:" +  (hashValue > 0 ? hashValue : -hashValue));
 		return  (hashValue > 0 ? hashValue : -hashValue);
 	}
 	
@@ -54,18 +51,14 @@ public class Hash {
 	// metodo de dispersao da MULTIPLICACAO
 	private int func_hash(int chave) {
 		double A = 0.6180339887;
-		System.out.println(Hashes.length + " - " + chave );
 		return (int)(Hashes.length * (chave * A % 1));
 		
 	}
 
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
-		System.out.println(intKey);
         int indice = func_hash(intKey);
-        System.out.println(indice + " - " + word + " - " + intKey);
         WordData wd = new WordData(word,indice);
-        System.out.println( " --------------- ");
         return Hashes[indice].search(wd);
        
     }

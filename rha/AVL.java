@@ -65,7 +65,6 @@ public class AVL extends BST {
 
 		// node agora vira filho esquerdo de newRoot.
 		newRoot.setLeft(node);
-		System.out.println("Rotação Left ");
 		return newRoot;
 	}
 	
@@ -92,14 +91,12 @@ public class AVL extends BST {
 		
 		// node agora vira filho direito de newRoot.
 		newRoot.setRight(node);
-		System.out.println("Rotação Right");
 		return newRoot;
 	}
 	
 	// Rotação LR.
 	private Node rotateLeftRight(Node node) {
 		node.setLeft(rotateLeft(node.getLeft()));
-		System.out.println("Rotação Left Right");
 		return rotateRight(node);
 		
 	}
@@ -107,7 +104,6 @@ public class AVL extends BST {
 	// Rotação RL.
 	private Node rotateRightLeft(Node node) {
 		node.setRight(rotateRight(node.getRight()));
-		System.out.println("Rotação Right Left");
 		return rotateLeft(node);
 	}
 	

@@ -1,18 +1,23 @@
 === VERIFICADOR DE SIMILARIDADE DE TEXTOS ===
 
-Total de documentos processados: 4
+Total de documentos processados: 3
 
-Total de pares comparados: 6
+Total de pares comparados: 3
 
 Funcao hash utilizada: hashMultiplicativo
 
 Métrica de similaridade: Cosseno
 
-Pares com similaridade >= 0.75:
+Pares com similaridade >= -1.00:
 
 ---------------------------------
+testee.txt <-> teste.txt = 0.00
+
+testee.txt <-> testeee.txt = 0.00
+
+teste.txt <-> testeee.txt = 0.00
 
 Pares com menor similaridade:
 
 ---------------------------------
-teste.txt <-> doc1.txt = 0.00
+teste.txt <-> testeee.txt = 0.00

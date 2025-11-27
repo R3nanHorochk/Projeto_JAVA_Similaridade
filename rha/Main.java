@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.io.FileFilter;
+
 
 public class Main {
 	private static int func_hash(int chave) {
@@ -25,13 +27,22 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		String diretorioDocumentos = "documentos";
-		double limiar = 0.75;
+		String diretorioDocumentos = args[0];
+
+		double limiar = Double.parseDouble(args[1]);
 		
-		// Lista todos os arquivos .txt no diretório
+		String modo = args[2];
+		
 		File dir = new File(diretorioDocumentos);
-		File[] arquivos = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".txt"));
-		
+		FileFilter filtro = new FileFilter() {
+
+                public boolean accept(File f)
+                {
+                    return f.getName().endsWith("txt");
+                }
+            };
+	     File[] arquivos = dir.listFiles(filtro);
+
 		if (arquivos == null || arquivos.length == 0) {
 			System.out.println("Nenhum arquivo .txt encontrado no diretório " + diretorioDocumentos);
 			return;
