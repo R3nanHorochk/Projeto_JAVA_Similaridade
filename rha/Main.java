@@ -27,9 +27,13 @@ public class Main {
     }
     
     public static void main(String[] args) {
-        // Validação básica de argumentos
+        // 1. Validação básica de argumentos
         if (args.length < 3) {
-            System.out.println("Uso: java Main <diretorio> <limiar> <modo> [k]");
+            System.out.println("Uso: java Main <diretorio> <limiar> <modo> [args_extras...]");
+            System.out.println("Modos disponíveis:");
+            System.out.println("  lista  -> Exibe todos os pares acima do limiar.");
+            System.out.println("  topK   -> Exibe os K pares mais semelhantes (ex: topK 5).");
+            System.out.println("  busca  -> Busca a similaridade entre dois arquivos específicos.");
             return;
         }
 
@@ -37,15 +41,30 @@ public class Main {
         double limiar = Double.parseDouble(args[1]);
         String modo = args[2];
         
-        // Leitura do argumento K se o modo for topK
+        // --- 2. CONFIGURAÇÃO E LEITURA DE ARGUMENTOS EXTRAS ---
         int k = 0;
+        String arquivoBusca1 = "";
+        String arquivoBusca2 = "";
+
         if (modo.equals("topK")) {
             if (args.length > 3) {
                 k = Integer.parseInt(args[3]);
             } else {
-                System.out.println("Erro: Informe o valor de K para o modo topK (ex: java Main ./docs 0.8 topK 5).");
+                System.out.println("Erro: Informe o valor de K para o modo topK.");
                 return;
             }
+        } else if (modo.equals("busca")) {
+            if (args.length > 4) {
+                arquivoBusca1 = args[3];
+                arquivoBusca2 = args[4];
+            } else {
+                System.out.println("Erro: O modo busca requer dois nomes de arquivos.");
+                return;
+            }
+        } else if (!modo.equals("lista")) {
+            // Se não for topK, nem busca, nem lista, é um modo inválido.
+            System.out.println("Erro: Modo '" + modo + "' desconhecido. Use: lista, topK ou busca.");
+            return;
         }
         
         File dir = new File(diretorioDocumentos);
@@ -103,7 +122,7 @@ public class Main {
             }
         });
         
-        // --- INÍCIO DA FORMATAÇÃO DE SAÍDA ---
+        // --- 3. GERAÇÃO DA SAÍDA ---
         
         StringBuilder saida = new StringBuilder();
         saida.append("=== VERIFICADOR DE SIMILARIDADE DE TEXTOS ===\n");
@@ -117,18 +136,14 @@ public class Main {
         saida.append("Métrica de similaridade: Cosseno\n");
         saida.append("\n");
 
-        // LÓGICA DE EXIBIÇÃO: TOP K vs LIMIAR
         if (modo.equals("topK")) {
+            // --- MODO TOP K ---
             saida.append("Modo: Top ").append(k).append(" pares mais semelhantes:\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
             
-            // Garante que não tentamos acessar índices que não existem (se K > totalPares)
             int limite = Math.min(k, resultados.size());
-            
-            if (limite == 0) {
-                 saida.append("Nenhum par processado.\n");
-            }
+            if (limite == 0) saida.append("Nenhum par processado.\n");
 
             for (int i = 0; i < limite; i++) {
                 Resultado r = resultados.get(i);
@@ -136,10 +151,36 @@ public class Main {
                     .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                 saida.append("\n");
             }
+
+        } else if (modo.equals("busca")) {
+            // --- MODO BUSCA ---
+            saida.append("Modo: Busca Específica (").append(arquivoBusca1)
+                 .append(" e ").append(arquivoBusca2).append(")\n");
+            saida.append("\n");
+            saida.append("---------------------------------\n");
             
+            boolean encontrado = false;
+            for (Resultado r : resultados) {
+                boolean matchDireto = r.getNomeFile1().equals(arquivoBusca1) && r.getNomeFile2().equals(arquivoBusca2);
+                boolean matchInverso = r.getNomeFile1().equals(arquivoBusca2) && r.getNomeFile2().equals(arquivoBusca1);
+                
+                if (matchDireto || matchInverso) {
+                    saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
+                        .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
+                    saida.append("\n");
+                    encontrado = true;
+                    break;
+                }
+            }
+            
+            if (!encontrado) {
+                saida.append("Par não encontrado.\n\n");
+            }
+
         } else {
-            // MODO PADRÃO (LIMIAR)
-            saida.append("Pares com similaridade >= ").append(String.format("%.2f", limiar)).append(":\n");
+            // --- MODO LISTA (Padrão) ---
+            // Este bloco roda se for "lista"
+            saida.append("Modo: Lista (Similaridade >= ").append(String.format("%.2f", limiar)).append("):\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
             
@@ -158,7 +199,6 @@ public class Main {
             }
         }
         
-        // Exibe o par com menor similaridade (comum aos dois modos)
         saida.append("Pares com menor similaridade:\n");
         saida.append("\n");
         saida.append("---------------------------------\n");
