@@ -1,8 +1,8 @@
 === VERIFICADOR DE SIMILARIDADE DE TEXTOS ===
 
-Total de documentos processados: 5
+Total de documentos processados: 6
 
-Total de pares comparados: 10
+Total de pares comparados: 15
 
 Funcao hash utilizada: hashMultiplicativo
 
