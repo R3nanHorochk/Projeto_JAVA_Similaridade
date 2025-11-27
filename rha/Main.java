@@ -62,7 +62,6 @@ public class Main {
                 return;
             }
         } else if (!modo.equals("lista")) {
-            // Se não for topK, nem busca, nem lista, é um modo inválido.
             System.out.println("Erro: Modo '" + modo + "' desconhecido. Use: lista, topK ou busca.");
             return;
         }
@@ -122,7 +121,7 @@ public class Main {
             }
         });
         
-        // --- 3. GERAÇÃO DA SAÍDA ---
+        // --- 3. GERAÇÃO DA SAÍDA (CONSOLE E TXT) ---
         
         StringBuilder saida = new StringBuilder();
         saida.append("=== VERIFICADOR DE SIMILARIDADE DE TEXTOS ===\n");
@@ -136,8 +135,10 @@ public class Main {
         saida.append("Métrica de similaridade: Cosseno\n");
         saida.append("\n");
 
+        // Lista auxiliar para guardar o que será exportado no CSV
+        List<Resultado> resultadosFiltrados = new ArrayList<>();
+
         if (modo.equals("topK")) {
-            // --- MODO TOP K ---
             saida.append("Modo: Top ").append(k).append(" pares mais semelhantes:\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
@@ -147,13 +148,14 @@ public class Main {
 
             for (int i = 0; i < limite; i++) {
                 Resultado r = resultados.get(i);
+                resultadosFiltrados.add(r); // Adiciona para o CSV
+                
                 saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                     .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                 saida.append("\n");
             }
 
         } else if (modo.equals("busca")) {
-            // --- MODO BUSCA ---
             saida.append("Modo: Busca Específica (").append(arquivoBusca1)
                  .append(" e ").append(arquivoBusca2).append(")\n");
             saida.append("\n");
@@ -165,6 +167,8 @@ public class Main {
                 boolean matchInverso = r.getNomeFile1().equals(arquivoBusca2) && r.getNomeFile2().equals(arquivoBusca1);
                 
                 if (matchDireto || matchInverso) {
+                    resultadosFiltrados.add(r); // Adiciona para o CSV
+                    
                     saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                         .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                     saida.append("\n");
@@ -172,14 +176,12 @@ public class Main {
                     break;
                 }
             }
-            
             if (!encontrado) {
                 saida.append("Par não encontrado.\n\n");
             }
 
         } else {
             // --- MODO LISTA (Padrão) ---
-            // Este bloco roda se for "lista"
             saida.append("Modo: Lista (Similaridade >= ").append(String.format("%.2f", limiar)).append("):\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
@@ -187,13 +189,14 @@ public class Main {
             boolean encontrouParesAcimaLimiar = false;
             for (Resultado r : resultados) {
                 if (r.getSimilaridade() >= limiar) {
+                    resultadosFiltrados.add(r); // Adiciona para o CSV
+                    
                     saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                         .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                     saida.append("\n");
                     encontrouParesAcimaLimiar = true;
                 }
             }
-            
             if (!encontrouParesAcimaLimiar) {
                 saida.append("Nenhum par acima do limiar.\n\n");
             }
@@ -212,11 +215,34 @@ public class Main {
         // Exibe no console
         System.out.print(saida.toString());
         
-        // Salva em arquivo
+        // Salva arquivo texto (Relatório)
         try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultado.txt"))) {
             writer.print(saida.toString());
         } catch (IOException e) {
             System.err.println("Erro ao escrever arquivo resultado.txt: " + e.getMessage());
+        }
+
+        // --- 4. GERAÇÃO DO CSV (Planilha) ---
+        StringBuilder csv = new StringBuilder();
+        // Cabeçalho do CSV
+        csv.append("Arquivo 1,Arquivo 2,Similaridade\n");
+        
+        for (Resultado r : resultadosFiltrados) {
+            // Formata o número trocando vírgula por ponto para não quebrar colunas no CSV padrão
+            String valorFormatado = String.format("%.4f", r.getSimilaridade()).replace(',', '.');
+            
+            csv.append(r.getNomeFile1()).append(",")
+               .append(r.getNomeFile2()).append(",")
+               .append(valorFormatado)
+               .append("\n");
+        }
+
+        // Salva arquivo CSV
+        try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultados.csv"))) {
+            writer.print(csv.toString());
+            System.out.println("\nArquivo resultados.csv gerado com sucesso.");
+        } catch (IOException e) {
+            System.err.println("Erro ao escrever arquivo resultados.csv: " + e.getMessage());
         }
     }
 }

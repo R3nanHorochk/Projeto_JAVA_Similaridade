@@ -8,9 +8,13 @@ Funcao hash utilizada: hashMultiplicativo
 
 Métrica de similaridade: Cosseno
 
-Modo: Busca Específica (doc1.txt e doc4.txt)
+Modo: Lista (Similaridade >= 0.05):
 
 ---------------------------------
+doc2.txt <-> doc4.txt = 1.00
+
+doc1.txt <-> doc2.txt = 0.40
+
 doc1.txt <-> doc4.txt = 0.40
 
 Pares com menor similaridade:
