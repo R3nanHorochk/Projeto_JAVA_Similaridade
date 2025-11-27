@@ -204,10 +204,10 @@ public class Main {
                     break;
                 }
             }
-            System.out.println("\n=== PRINT ALV ===\n");
+            System.out.println("\n=== PRINT AVL ===\n");
             alvRESULT.printTreeR();
-            System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
-            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
+            System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
             if (!encontrado) {
                 saida.append("Par não encontrado.\n\n");
             }
