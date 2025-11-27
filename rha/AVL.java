@@ -236,9 +236,9 @@ public class AVL extends BST {
 	}
 	
 	public List<WordData> getAllData() {
-    List<WordData> result = new ArrayList<>();
-    inOrder(this.root, result);
-    return result;
+		List<WordData> result = new ArrayList<>();
+		inOrder(this.root, result);
+		return result;
 	}
 
 	private void inOrder(Node node, List<WordData> list) {
