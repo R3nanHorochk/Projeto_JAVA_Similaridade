@@ -1,4 +1,9 @@
 package rha;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 
 public class Main {
 	private static int func_hash(int chave) {
@@ -16,15 +21,16 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt");
+		
+		 Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt");
 		Hash h1 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt" ) ;
-		//System.out.println(h1);
+		
 
 		Documento d2 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt");
 		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt" ) ;
-		//System.out.println(h2);
+		
 
-		double similarity = CompareTo.cosineSimilarity(h1, h2);
+		double similarity = CompareTo.cosineSimilarity(h1.getAllWordData(), h2.getAllWordData());
         System.out.printf("Similaridade: %.2f%%\n", similarity);
 		
 	}

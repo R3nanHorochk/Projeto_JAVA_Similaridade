@@ -1,7 +1,8 @@
 package rha;
 
 import java.util.Arrays;
-
+import java.util.List;
+import java.util.ArrayList;
 public class Hash {
 	private AVL[] Hashes;
 	
@@ -75,6 +76,19 @@ public class Hash {
         WordData wd = new WordData(word,indice);
         Hashes[indice].remove_ALV(wd);
     }
+
+
+	public List<WordData> getAllWordData() {
+    List<WordData> result = new ArrayList<>();
+
+    for (AVL tree : Hashes) {
+        if (tree != null && !tree.isEmpty()) {
+            result.addAll(tree.getAllData());
+        }
+    }
+
+    return result;
+}
 
 	//TODO: implementar os metodos insertFrequency e updateFrequency
 
