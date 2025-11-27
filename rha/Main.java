@@ -8,148 +8,241 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.io.FileFilter;
 
 public class Main {
-	private static int func_hash(int chave) {
-		double A = 0.6180339887;
-		return (int)(20 * (chave * A % 1));
-	}
-	public static int charactere(String palavra) {
-		int indice = 0;
-		int valor = 0;
-		for(int i = 0 ; i < palavra.length() ; i++) {
-			valor = func_hash(palavra.charAt(i));
-			indice += valor;
-		}
-		return indice;
-	}
-	
-	public static void main(String[] args) {
-<<<<<<< HEAD
-		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt");
-		Hash h1 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt" ) ;
-		//System.out.println(h1);
+    private static int func_hash(int chave) {
+        double A = 0.6180339887;
+        return (int)(20 * (chave * A % 1));
+    }
+    
+    public static int charactere(String palavra) {
+        int indice = 0;
+        int valor = 0;
+        for(int i = 0 ; i < palavra.length() ; i++) {
+            valor = func_hash(palavra.charAt(i));
+            indice += valor;
+        }
+        return indice;
+    }
+    
+    public static void main(String[] args) {
+        // 1. Validação básica de argumentos
+        if (args.length < 3) {
+            System.out.println("Uso: java Main <diretorio> <limiar> <modo> [args_extras...]");
+            System.out.println("Modos disponíveis:");
+            System.out.println("  lista  -> Exibe todos os pares acima do limiar.");
+            System.out.println("  topK   -> Exibe os K pares mais semelhantes (ex: topK 5).");
+            System.out.println("  busca  -> Busca a similaridade entre dois arquivos específicos.");
+            return;
+        }
 
-		Documento d2 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt");
-		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt" ) ;
-		//System.out.println(h2);
+        String diretorioDocumentos = args[0];
+        double limiar = Double.parseDouble(args[1]);
+        String modo = args[2];
+        
+        // --- 2. CONFIGURAÇÃO E LEITURA DE ARGUMENTOS EXTRAS ---
+        int k = 0;
+        String arquivoBusca1 = "";
+        String arquivoBusca2 = "";
 
-		//double similarity = CompareTo.cosineSimilarity(h1, h2);
-        //System.out.printf("Similaridade: %.2f%%\n", similarity);
+        if (modo.equals("topK")) {
+            if (args.length > 3) {
+                k = Integer.parseInt(args[3]);
+            } else {
+                System.out.println("Erro: Informe o valor de K para o modo topK.");
+                return;
+            }
+        } else if (modo.equals("busca")) {
+            if (args.length > 4) {
+                arquivoBusca1 = args[3];
+                arquivoBusca2 = args[4];
+            } else {
+                System.out.println("Erro: O modo busca requer dois nomes de arquivos.");
+                return;
+            }
+        } else if (!modo.equals("lista")) {
+            System.out.println("Erro: Modo '" + modo + "' desconhecido. Use: lista, topK ou busca.");
+            return;
+        }
+        
+        File dir = new File(diretorioDocumentos);
+        FileFilter filtro = new FileFilter() {
+            public boolean accept(File f) {
+                return f.getName().endsWith("txt");
+            }
+        };
+        File[] arquivos = dir.listFiles(filtro);
 
-		List<String> word1;
-		List<String> word2;
-		List<Integer> frequence1;
-		List<Integer> frequence2;
-		CompareTo.estractWords(h1, word1, frequence1);
-		CompareTo.estractWords(h2, word2, frequence2);
+        if (arquivos == null || arquivos.length == 0) {
+            System.out.println("Nenhum arquivo .txt encontrado no diretório " + diretorioDocumentos);
+            return;
+        }
+        
+        // Processa cada documento
+        List<Documento> documentos = new ArrayList<>();
+        List<Hash> hashes = new ArrayList<>();
+        List<String> nomesArquivos = new ArrayList<>();
+        
+        for (File arquivo : arquivos) {
+            String caminho = arquivo.getAbsolutePath();
+            Documento doc = new Documento(caminho);
+            Hash hash = doc.wordFrequency(caminho);
+            documentos.add(doc);
+            hashes.add(hash);
+            nomesArquivos.add(arquivo.getName());
+        }
+        
+        // Calcula similaridade entre todos os pares
+        List<Resultado> resultados = new ArrayList<>();
+        int totalPares = 0;
+        
+        for (int i = 0; i < hashes.size(); i++) {
+            for (int j = i + 1; j < hashes.size(); j++) {
+                double similaridade = CompareTo.cosineSimilarity(
+                    hashes.get(i).getAllWordData(), 
+                    hashes.get(j).getAllWordData()
+                );
+                Resultado resultado = new Resultado(
+                    nomesArquivos.get(i),
+                    nomesArquivos.get(j),
+                    similaridade
+                );
+                resultados.add(resultado);
+                totalPares++;
+            }
+        }
+        
+        // Ordena por similaridade (maior para menor)
+        Collections.sort(resultados, new Comparator<Resultado>() {
+            @Override
+            public int compare(Resultado r1, Resultado r2) {
+                return Double.compare(r2.getSimilaridade(), r1.getSimilaridade());
+            }
+        });
+        
+        // --- 3. GERAÇÃO DA SAÍDA (CONSOLE E TXT) ---
+        
+        StringBuilder saida = new StringBuilder();
+        saida.append("=== VERIFICADOR DE SIMILARIDADE DE TEXTOS ===\n");
+        saida.append("\n");
+        saida.append("Total de documentos processados: ").append(documentos.size()).append("\n");
+        saida.append("\n");
+        saida.append("Total de pares comparados: ").append(totalPares).append("\n");
+        saida.append("\n");
+        saida.append("Funcao hash utilizada: hashMultiplicativo\n");
+        saida.append("\n");
+        saida.append("Métrica de similaridade: Cosseno\n");
+        saida.append("\n");
 
-		double result = CompareTo.cosineSimilarity(word1,frequence1,word2,frequence2);
-		 System.out.printf("Similaridade: %.2f%%\n", result);
-=======
-		String diretorioDocumentos = "documentos";
-		double limiar = 0.75;
->>>>>>> bc9e8ff8ef4fd01962ac062328107b13ea5e95dc
-		
-		// Lista todos os arquivos .txt no diretório
-		File dir = new File(diretorioDocumentos);
-		File[] arquivos = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".txt"));
-		
-		if (arquivos == null || arquivos.length == 0) {
-			System.out.println("Nenhum arquivo .txt encontrado no diretório " + diretorioDocumentos);
-			return;
-		}
-		
-		// Processa cada documento
-		List<Documento> documentos = new ArrayList<>();
-		List<Hash> hashes = new ArrayList<>();
-		List<String> nomesArquivos = new ArrayList<>();
-		
-		for (File arquivo : arquivos) {
-			String caminho = arquivo.getAbsolutePath();
-			Documento doc = new Documento(caminho);
-			Hash hash = doc.wordFrequency(caminho);
-			documentos.add(doc);
-			hashes.add(hash);
-			nomesArquivos.add(arquivo.getName());
-		}
-		
-		// Calcula similaridade entre todos os pares
-		List<Resultado> resultados = new ArrayList<>();
-		int totalPares = 0;
-		
-		for (int i = 0; i < hashes.size(); i++) {
-			for (int j = i + 1; j < hashes.size(); j++) {
-				double similaridade = CompareTo.cosineSimilarity(
-					hashes.get(i).getAllWordData(), 
-					hashes.get(j).getAllWordData()
-				);
-				Resultado resultado = new Resultado(
-					nomesArquivos.get(i),
-					nomesArquivos.get(j),
-					similaridade
-				);
-				resultados.add(resultado);
-				totalPares++;
-			}
-		}
-		
-		// Ordena por similaridade (maior para menor)
-		Collections.sort(resultados, new Comparator<Resultado>() {
-			@Override
-			public int compare(Resultado r1, Resultado r2) {
-				return Double.compare(r2.getSimilaridade(), r1.getSimilaridade());
-			}
-		});
-		
-		// Formata a saída
-		StringBuilder saida = new StringBuilder();
-		saida.append("=== VERIFICADOR DE SIMILARIDADE DE TEXTOS ===\n");
-		saida.append("\n");
-		saida.append("Total de documentos processados: ").append(documentos.size()).append("\n");
-		saida.append("\n");
-		saida.append("Total de pares comparados: ").append(totalPares).append("\n");
-		saida.append("\n");
-		saida.append("Funcao hash utilizada: hashMultiplicativo\n");
-		saida.append("\n");
-		saida.append("Métrica de similaridade: Cosseno\n");
-		saida.append("\n");
-		saida.append("Pares com similaridade >= ").append(String.format("%.2f", limiar)).append(":\n");
-		saida.append("\n");
-		saida.append("---------------------------------\n");
-		
-		boolean encontrouParesAcimaLimiar = false;
-		for (Resultado r : resultados) {
-			if (r.getSimilaridade() >= limiar) {
-				saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
-					.append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
-				saida.append("\n");
-				encontrouParesAcimaLimiar = true;
-			}
-		}
-		
-		if (!encontrouParesAcimaLimiar) {
-			saida.append("\n");
-		}
-		saida.append("Pares com menor similaridade:\n");
-		saida.append("\n");
-		saida.append("---------------------------------\n");
-		
-		if (!resultados.isEmpty()) {
-			Resultado menor = resultados.get(resultados.size() - 1);
-			saida.append(menor.getNomeFile1()).append(" <-> ").append(menor.getNomeFile2())
-				.append(" = ").append(String.format("%.2f", menor.getSimilaridade())).append("\n");
-		}
-		
-		// Exibe no console
-		System.out.print(saida.toString());
-		
-		// Salva em arquivo
-		try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultado.txt"))) {
-			writer.print(saida.toString());
-		} catch (IOException e) {
-			System.err.println("Erro ao escrever arquivo resultado.txt: " + e.getMessage());
-		}
-	}
+        // Lista auxiliar para guardar o que será exportado no CSV
+        List<Resultado> resultadosFiltrados = new ArrayList<>();
 
+        if (modo.equals("topK")) {
+            saida.append("Modo: Top ").append(k).append(" pares mais semelhantes:\n");
+            saida.append("\n");
+            saida.append("---------------------------------\n");
+            
+            int limite = Math.min(k, resultados.size());
+            if (limite == 0) saida.append("Nenhum par processado.\n");
+
+            for (int i = 0; i < limite; i++) {
+                Resultado r = resultados.get(i);
+                resultadosFiltrados.add(r); // Adiciona para o CSV
+                
+                saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
+                    .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
+                saida.append("\n");
+            }
+
+        } else if (modo.equals("busca")) {
+            saida.append("Modo: Busca Específica (").append(arquivoBusca1)
+                 .append(" e ").append(arquivoBusca2).append(")\n");
+            saida.append("\n");
+            saida.append("---------------------------------\n");
+            
+            boolean encontrado = false;
+            for (Resultado r : resultados) {
+                boolean matchDireto = r.getNomeFile1().equals(arquivoBusca1) && r.getNomeFile2().equals(arquivoBusca2);
+                boolean matchInverso = r.getNomeFile1().equals(arquivoBusca2) && r.getNomeFile2().equals(arquivoBusca1);
+                
+                if (matchDireto || matchInverso) {
+                    resultadosFiltrados.add(r); // Adiciona para o CSV
+                    
+                    saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
+                        .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
+                    saida.append("\n");
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) {
+                saida.append("Par não encontrado.\n\n");
+            }
+
+        } else {
+            // --- MODO LISTA (Padrão) ---
+            saida.append("Modo: Lista (Similaridade >= ").append(String.format("%.2f", limiar)).append("):\n");
+            saida.append("\n");
+            saida.append("---------------------------------\n");
+            
+            boolean encontrouParesAcimaLimiar = false;
+            for (Resultado r : resultados) {
+                if (r.getSimilaridade() >= limiar) {
+                    resultadosFiltrados.add(r); // Adiciona para o CSV
+                    
+                    saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
+                        .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
+                    saida.append("\n");
+                    encontrouParesAcimaLimiar = true;
+                }
+            }
+            if (!encontrouParesAcimaLimiar) {
+                saida.append("Nenhum par acima do limiar.\n\n");
+            }
+        }
+        
+        saida.append("Pares com menor similaridade:\n");
+        saida.append("\n");
+        saida.append("---------------------------------\n");
+        
+        if (!resultados.isEmpty()) {
+            Resultado menor = resultados.get(resultados.size() - 1);
+            saida.append(menor.getNomeFile1()).append(" <-> ").append(menor.getNomeFile2())
+                .append(" = ").append(String.format("%.2f", menor.getSimilaridade())).append("\n");
+        }
+        
+        // Exibe no console
+        System.out.print(saida.toString());
+        
+        // Salva arquivo texto (Relatório)
+        try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultado.txt"))) {
+            writer.print(saida.toString());
+        } catch (IOException e) {
+            System.err.println("Erro ao escrever arquivo resultado.txt: " + e.getMessage());
+        }
+
+        // --- 4. GERAÇÃO DO CSV (Planilha) ---
+        StringBuilder csv = new StringBuilder();
+        // Cabeçalho do CSV
+        csv.append("Arquivo 1,Arquivo 2,Similaridade\n");
+        
+        for (Resultado r : resultadosFiltrados) {
+            // Formata o número trocando vírgula por ponto para não quebrar colunas no CSV padrão
+            String valorFormatado = String.format("%.4f", r.getSimilaridade()).replace(',', '.');
+            
+            csv.append(r.getNomeFile1()).append(",")
+               .append(r.getNomeFile2()).append(",")
+               .append(valorFormatado)
+               .append("\n");
+        }
+
+        // Salva arquivo CSV
+        try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultados.csv"))) {
+            writer.print(csv.toString());
+            System.out.println("\nArquivo resultados.csv gerado com sucesso.");
+        } catch (IOException e) {
+            System.err.println("Erro ao escrever arquivo resultados.csv: " + e.getMessage());
+        }
+    }
 }
