@@ -3,7 +3,6 @@ import java.util.*;
 import java.util.List;
 import java.util.ArrayList;
 public class CompareTo {
-    // Constrói listas de palavras únicas e frequências a partir da hash do documento
    
     public static int findFrequency(List<WordData> list, String word) {
     for (WordData wd : list) {
