@@ -183,10 +183,12 @@ public class Main {
             saida.append("Modo: Lista (Similaridade >= ").append(String.format("%.2f", limiar)).append("):\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
-            
+            AVLR alvRESULT = new AVLR();
             boolean encontrouParesAcimaLimiar = false;
             for (Resultado r : resultados) {
                 if (r.getSimilaridade() >= limiar) {
+                    System.out.println(r.getNomeFile2()+" - "+r.getNomeFile1()+" - "+r.getSimilaridade());
+                    alvRESULT.insertAVL(r);
                     saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                         .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                     saida.append("\n");
@@ -197,6 +199,8 @@ public class Main {
             if (!encontrouParesAcimaLimiar) {
                 saida.append("Nenhum par acima do limiar.\n\n");
             }
+            System.out.println("TESTE");
+             alvRESULT.printTop(5);
         }
         
         saida.append("Pares com menor similaridade:\n");
@@ -211,7 +215,7 @@ public class Main {
         
         // Exibe no console
         System.out.print(saida.toString());
-        
+       
         // Salva em arquivo
         try (PrintWriter writer = new PrintWriter(new FileWriter("rha/resultado.txt"))) {
             writer.print(saida.toString());
