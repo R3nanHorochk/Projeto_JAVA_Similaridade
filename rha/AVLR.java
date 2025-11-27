@@ -6,6 +6,26 @@ import java.util.List;
 public class AVLR extends BSTR {
 
     private int count = 0; // usado por printTop
+    private int Rotacaocount = 0;
+    private int colisaoCount = -1;
+
+    public int getRotacaocount() {
+    return Rotacaocount;
+}
+
+public int getColisaoCount() {
+    return colisaoCount;
+}
+
+// ---------------- SETTERS ----------------
+
+public void setRotacaocount(int rotacaocount) {
+    this.Rotacaocount = rotacaocount;
+}
+
+public void setColisaoCount(int colisaoCount) {
+    this.colisaoCount = colisaoCount;
+}
 
     public AVLR() {
         super();
@@ -31,6 +51,7 @@ public class AVLR extends BSTR {
 
     // Rotação à esquerda (LL case)
     private NodeR rotateLeft(NodeR node) {
+        Rotacaocount = Rotacaocount + 1;
         if (node == null) return null;
         NodeR newRoot = node.getRight();
         if (newRoot == null) return null;
@@ -50,6 +71,7 @@ public class AVLR extends BSTR {
 
     // Rotação à direita (RR case)
     private NodeR rotateRight(NodeR node) {
+        Rotacaocount = Rotacaocount + 1;
         if (node == null) return null;
         NodeR newRoot = node.getLeft();
         if (newRoot == null) return null;
@@ -66,12 +88,14 @@ public class AVLR extends BSTR {
 
     // LR
     private NodeR rotateLeftRight(NodeR node) {
+        Rotacaocount = Rotacaocount + 1;
         node.setLeft(rotateLeft(node.getLeft()));
         return rotateRight(node);
     }
 
     // RL
     private NodeR rotateRightLeft(NodeR node) {
+        Rotacaocount = Rotacaocount + 1;
         node.setRight(rotateRight(node.getRight()));
         return rotateLeft(node);
     }
@@ -109,10 +133,21 @@ public class AVLR extends BSTR {
     /** ------------------------------- INSERT AVL ----------------------------------- */
 
     public void insertAVL(Resultado data) {
+        colisaoCount = colisaoCount + 1;
         root = insertAVL(root, null, data);
     }
     private int extrairNumero(String nome) {
-    return Integer.parseInt(nome.replaceAll("\\D+", ""));
+    int soma = 0;
+     for (char c : nome.toCharArray()) {
+
+        if (Character.isDigit(c)) {
+            int n = c - '0';   
+            soma += n * n ; 
+        } else {
+            soma += c; 
+        }
+    }
+    return soma;
     }
 
     // assinatura corrigida: data é Resultado (não NodeR)
@@ -255,4 +290,33 @@ public class AVLR extends BSTR {
             return "AVL - empty";
         }
     }
+
+    public void printTreeR() {
+    printTree(this.root, "", true);
+    System.out.println("\n Rotações: " + this.getRotacaocount());
+}
+
+private void printTree(NodeR node, String prefix, boolean isLeft) {
+    if (node == null) return;
+
+    // imprime o nodo atual
+    System.out.println(prefix + (isLeft ? "├── " : "└── ") + formatValor(node));
+
+    // imprime filhos
+    if (node.getLeft() != null || node.getRight() != null) {
+        printTree(node.getLeft(), prefix + (isLeft ? "│   " : "    "), true);
+        printTree(node.getRight(), prefix + (isLeft ? "│   " : "    "), false);
+    }
+}
+
+// Formata o valor do node (float, double, ou seu Resultado)
+private String formatValor(NodeR node) {
+    try {
+        // caso seu node tenha getData().getSimilaridade()
+        double v = node.getData().getSimilaridade();
+        return String.format("%.2f", v);
+    } catch (Exception e) {
+        return node.toString();
+    }
+}
 }

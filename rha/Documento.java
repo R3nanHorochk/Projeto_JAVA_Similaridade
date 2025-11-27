@@ -64,8 +64,8 @@ public class Documento {
 
     public Documento(String arquivo) {
         this.arquivo = arquivo;
-        this.hashtable = new Hash(26);
-        this.stopWordsHash = new Hash(26);
+        this.hashtable = new Hash(26,true);
+        this.stopWordsHash = new Hash(26,true);
         stopWordsStart();
     }
 
@@ -80,8 +80,8 @@ public class Documento {
     }
     // --------------------------- methods ------------------------------------
     // calcula a frequencia de palavras com uma hash interna
-    private void wordFrequencyFile(List<String> wordsNormalized) {
-        Hash wordsFrequency = new Hash(26);
+    private void wordFrequencyFile(List<String> wordsNormalized,boolean mult) {
+        Hash wordsFrequency = new Hash(26,mult);
         
         for(String word : wordsNormalized) {
             Node node = hashtable.buscar(word);
@@ -96,9 +96,9 @@ public class Documento {
 
     }
 
-    public Hash wordFrequency(String filePath) {
+    public Hash wordFrequency(String filePath , boolean mult) {
     	List<String> wordsNormalized = normalizeFile(filePath);
-        wordFrequencyFile(wordsNormalized);
+        wordFrequencyFile(wordsNormalized,mult);
         return hashtable ;
     }
 

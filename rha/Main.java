@@ -15,6 +15,16 @@ public class Main {
         double A = 0.6180339887;
         return (int)(20 * (chave * A % 1));
     }
+
+    private static int func_hash2(String a, int stringSize, int tableSize) {
+    int hashVal = (int) a.charAt(0);
+
+    for (int j = 1; j < stringSize; j++) {
+        hashVal += (int) a.charAt(j);
+    }
+
+    return hashVal % tableSize;
+    }
     
     public static int charactere(String palavra) {
         int indice = 0;
@@ -82,15 +92,24 @@ public class Main {
         // Processa cada documento
         List<Documento> documentos = new ArrayList<>();
         List<Hash> hashes = new ArrayList<>();
+        List<Hash> hashes2 = new ArrayList<>();
         List<String> nomesArquivos = new ArrayList<>();
-        
+        int colisaoMult = 0;
+        int colisaoDiv = 0;
         for (File arquivo : arquivos) {
             String caminho = arquivo.getAbsolutePath();
             Documento doc = new Documento(caminho);
-            Hash hash = doc.wordFrequency(caminho);
+            Hash hash = doc.wordFrequency(caminho,true);
+             
+            Hash hash2 = doc.wordFrequency(caminho,true);
+            colisaoMult = colisaoMult + hash.getTotalColisoes(); 
+            colisaoDiv = colisaoDiv + hash2.getTotalColisoes();
             documentos.add(doc);
             hashes.add(hash);
+            hash.setMult(false);
+            hashes2.add(hash2);
             nomesArquivos.add(arquivo.getName());
+
         }
         
         // Calcula similaridade entre todos os pares
@@ -137,7 +156,7 @@ public class Main {
 
         // Lista auxiliar para guardar o que será exportado no CSV
         List<Resultado> resultadosFiltrados = new ArrayList<>();
-
+        AVLR alvRESULT = new AVLR();
         if (modo.equals("topK")) {
             saida.append("Modo: Top ").append(k).append(" pares mais semelhantes:\n");
             saida.append("\n");
@@ -149,11 +168,16 @@ public class Main {
             for (int i = 0; i < limite; i++) {
                 Resultado r = resultados.get(i);
                 resultadosFiltrados.add(r); // Adiciona para o CSV
-                
+                alvRESULT.insertAVL(r);
                 saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                     .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                 saida.append("\n");
             }
+            System.out.println("\n=== PRINT ALV ===\n");
+            alvRESULT.printTop(limite);
+            alvRESULT.printTreeR();
+            System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
 
         } else if (modo.equals("busca")) {
             saida.append("Modo: Busca Específica (").append(arquivoBusca1)
@@ -168,7 +192,7 @@ public class Main {
                 
                 if (matchDireto || matchInverso) {
                     resultadosFiltrados.add(r); // Adiciona para o CSV
-                    
+                    alvRESULT.insertAVL(r);
                     saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                         .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                     saida.append("\n");
@@ -176,6 +200,10 @@ public class Main {
                     break;
                 }
             }
+            System.out.println("\n=== PRINT ALV ===\n");
+            alvRESULT.printTreeR();
+            System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
             if (!encontrado) {
                 saida.append("Par não encontrado.\n\n");
             }
@@ -185,23 +213,26 @@ public class Main {
             saida.append("Modo: Lista (Similaridade >= ").append(String.format("%.2f", limiar)).append("):\n");
             saida.append("\n");
             saida.append("---------------------------------\n");
-            AVLR alvRESULT = new AVLR();
+            
             boolean encontrouParesAcimaLimiar = false;
             for (Resultado r : resultados) {
                 if (r.getSimilaridade() >= limiar) {
                     resultadosFiltrados.add(r); // Adiciona para o CSV
-                    
+                    alvRESULT.insertAVL(r);
                     saida.append(r.getNomeFile1()).append(" <-> ").append(r.getNomeFile2())
                         .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                     saida.append("\n");
                     encontrouParesAcimaLimiar = true;
                 }
             }
+            System.out.println("\n=== PRINT ALV ===\n");
+             alvRESULT.printTreeR();
+             System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
             if (!encontrouParesAcimaLimiar) {
                 saida.append("Nenhum par acima do limiar.\n\n");
             }
-            System.out.println("TESTE");
-             alvRESULT.printTop(5);
+            
         }
         
         saida.append("Pares com menor similaridade:\n");

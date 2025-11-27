@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 public class Hash {
 	private AVL[] Hashes;
+	private boolean Mult = true;
 	
 	public void Inserir(String word) {
 		int intKey = stringToIntHash(word);
@@ -18,7 +19,9 @@ public class Hash {
 			// somo mais um nela
 		}
 	}
-
+	public void setMult(boolean mult) {
+    this.Mult = mult;
+}
 	private boolean existsKey(String word) {
 		/*
 		 * retorno falso se a key nao existe na hash table e true se existe.
@@ -41,11 +44,13 @@ public class Hash {
 		return  (hashValue > 0 ? hashValue : -hashValue);
 	}
 	
-	public Hash(int tamanho) {
+	public Hash(int tamanho,boolean multiMetodo) {
 		Hashes = new AVL[tamanho];
 	        for (int i = 0; i < tamanho; i++) {
 	        	Hashes[i] = new AVL();
 	        }
+
+		this.Mult = multiMetodo;
 	    }
 	
 	// metodo de dispersao da MULTIPLICACAO
@@ -55,17 +60,44 @@ public class Hash {
 		
 	}
 
+	private int func_hash2(int Valor) {
+    return Valor % Hashes.length;
+    }
+
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
-        int indice = func_hash(intKey);
+		int indice = 0;
+		if(Mult = true){
+			 indice = func_hash(intKey);
+		}else{
+			 indice = func_hash2(intKey);
+		}
         WordData wd = new WordData(word,indice);
         return Hashes[indice].search(wd);
        
     }
 
+	public int getTotalColisoes() {
+    int total = 0;
+
+    for (AVL avl : this.Hashes) {
+        if (avl != null) {
+            total = total + avl.getColisaoCount();  // soma as colisões de cada AVL
+			total = total + 1;
+        }
+    }
+
+    return total;
+	}
+
     public void remover(String word) {
 		int intKey = stringToIntHash(word);
-        int indice = func_hash(intKey);
+		int indice = 0;
+        if(Mult = true){
+			 indice = func_hash(intKey);
+		}else{
+			 indice = func_hash2(intKey);
+		}
         WordData wd = new WordData(word,indice);
         Hashes[indice].remove_ALV(wd);
     }
@@ -81,7 +113,7 @@ public class Hash {
     }
 
     return result;
-}
+}	
 
 	//TODO: implementar os metodos insertFrequency e updateFrequency
 

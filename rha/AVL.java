@@ -20,7 +20,23 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class AVL extends BST {
+	private int Rotacaocount = 0;
+    private int colisaoCount = -1;
 
+    public int getRotacaocount() {
+    return Rotacaocount;
+}
+
+public int getColisaoCount() {
+    return colisaoCount;
+}
+public void setRotacaocount(int rotacaocount) {
+    this.Rotacaocount = rotacaocount;
+}
+
+public void setColisaoCount(int colisaoCount) {
+    this.colisaoCount = colisaoCount;
+}
 	public AVL() {
 		super();
 	}
@@ -47,7 +63,7 @@ public class AVL extends BST {
 		if (node == null) {
 			return null;
 		}
-		
+		Rotacaocount = Rotacaocount + 1;
 		// O nó atual deve ter um filho direito, que será a nova raiz desta subárvore.
 		Node newRoot = node.getRight();
 		if (newRoot == null) {
@@ -73,7 +89,7 @@ public class AVL extends BST {
 		if (node == null) {
 			return null;
 		}
-		
+		Rotacaocount = Rotacaocount + 1;
 		// O nó atual deve ter um filho esquerdo, que será a nova raiz desta subárvore.
 		Node newRoot = node.getLeft();
 		if (newRoot == null) {
@@ -96,6 +112,7 @@ public class AVL extends BST {
 	
 	// Rotação LR.
 	private Node rotateLeftRight(Node node) {
+		Rotacaocount = Rotacaocount + 1;
 		node.setLeft(rotateLeft(node.getLeft()));
 		return rotateRight(node);
 		
@@ -103,6 +120,7 @@ public class AVL extends BST {
 	
 	// Rotação RL.
 	private Node rotateRightLeft(Node node) {
+		Rotacaocount = Rotacaocount + 1;
 		node.setRight(rotateRight(node.getRight()));
 		return rotateLeft(node);
 	}
@@ -168,6 +186,7 @@ public class AVL extends BST {
 	}
 	
 	public void insert_ALV(WordData data) {
+		 colisaoCount = colisaoCount + 1;
 		 root = insert_ALV(root, null, data);
 	}
 	
