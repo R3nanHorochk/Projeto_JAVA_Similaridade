@@ -1,14 +1,16 @@
 package rha;
-import java.util.*;
 
+//método dos cossenos
 public class CompareTo {
     // Constrói listas de palavras únicas e frequências a partir da hash do documento
-    private static void extractWords(Hash hash, List<String> uniqueWords, List<Integer> frequencies) {
+    private static void extractWords(Hash hash, List<String> word) {
         // Aqui usamos um método público que percorre todos os nós
-        hash.forEachWord(wd -> {
-            uniqueWords.add(wd.getWord());
-            frequencies.add(wd.getFrequency());
-        });
+       for (int i = 0; i < hash.length; i++){
+            if(hash.size[i] != null){
+                
+
+            }
+        }
     }
 
     private static double cosineSimilarity(List<String> words1, List<Integer> freq1,

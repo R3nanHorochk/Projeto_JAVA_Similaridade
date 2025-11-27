@@ -24,8 +24,18 @@ public class Main {
 		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt" ) ;
 		//System.out.println(h2);
 
-		double similarity = CompareTo.cosineSimilarity(h1, h2);
-        System.out.printf("Similaridade: %.2f%%\n", similarity);
+		//double similarity = CompareTo.cosineSimilarity(h1, h2);
+        //System.out.printf("Similaridade: %.2f%%\n", similarity);
+
+		List<String> word1;
+		List<String> word2;
+		List<Integer> frequence1;
+		List<Integer> frequence2;
+		CompareTo.estractWords(h1, word1, frequence1);
+		CompareTo.estractWords(h2, word2, frequence2);
+
+		double result = CompareTo.cosineSimilarity(word1,frequence1,word2,frequence2);
+		 System.out.printf("Similaridade: %.2f%%\n", result);
 		
 	}
 

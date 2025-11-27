@@ -57,6 +57,9 @@ public class Hash {
 		return (int)(Hashes.length * (chave * A % 1));
 		
 	}
+	int hash(int chave) {
+	    return (int)(Hashes.length%chave);
+	}
 
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
