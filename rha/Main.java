@@ -177,11 +177,11 @@ public class Main {
                     .append(" = ").append(String.format("%.2f", r.getSimilaridade())).append("\n");
                 saida.append("\n");
             }
-            System.out.println("\n=== PRINT ALV ===\n");
+            System.out.println("\n=== PRINT AVL ===\n");
             alvRESULT.printTop(limite);
             alvRESULT.printTreeR();
-            System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
-            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
+            System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
 
         } else if (modo.equals("busca")) {
             saida.append("Modo: Busca Específica (").append(arquivoBusca1)
@@ -229,10 +229,10 @@ public class Main {
                     encontrouParesAcimaLimiar = true;
                 }
             }
-            System.out.println("\n=== PRINT ALV ===\n");
+            System.out.println("\n=== PRINT AVL ===\n");
              alvRESULT.printTreeR();
-             System.out.println("\nTotal de colsões no metodo da Multiplicação: " + colisaoMult + "\n");
-            System.out.println("Total de colsões no metodo da Divisão: " + colisaoDiv + "\n");
+             System.out.println("\nTotal de colisões no metodo da Multiplicação: " + colisaoMult + "\n");
+            System.out.println("Total de colisões no metodo da Divisão: " + colisaoDiv + "\n");
             if (!encontrouParesAcimaLimiar) {
                 saida.append("Nenhum par acima do limiar.\n\n");
             }
