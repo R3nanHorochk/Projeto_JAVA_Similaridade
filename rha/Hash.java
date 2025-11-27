@@ -7,14 +7,24 @@ public class Hash {
 	private AVL[] Hashes;
 	private boolean Mult = true;
 	private int colisaoCountT = 0;
+	private int igual = 0;
+	private int size = 0;
 	public void Inserir(String word) {
 		int intKey = stringToIntHash(word);
 		
-		int indice = func_hash(intKey);
-		WordData wd = new WordData(word,indice,1);
-		if(this.Hashes[indice] != null){
-			colisaoCountT = colisaoCountT + 1;
+		
+		int indice = 0 ;
+		if (Mult == true){
+   			 indice = func_hash(intKey);
+		}else{
+    indice = func_hash2(intKey);
 		}
+		if (!Hashes[indice].isEmpty()) {
+        colisaoCountT++;
+    }
+
+		WordData wd = new WordData(word,indice,1);
+		
 		if(!existsKey(word)) {
 			
 			Hashes[indice].insert_ALV(wd);
@@ -22,6 +32,7 @@ public class Hash {
 		} else {
 			// somo mais um nela
 		}
+
 	}
 	public void setMult(boolean mult) {
     this.Mult = mult;
@@ -39,10 +50,9 @@ public class Hash {
 		int p = 31;
 
 		int hashValue = 0;
-
-		// calculando o valor polinomial
+		int m = 1000000007;
 		for (int i = 0; i < word.length(); i++) {
-			hashValue = (hashValue * p) + word.charAt(i);
+			hashValue = ((hashValue * p) + word.charAt(i)) % m;
 			
 		}
 		return  (hashValue > 0 ? hashValue : -hashValue);
@@ -53,14 +63,17 @@ public class Hash {
 	        for (int i = 0; i < tamanho; i++) {
 	        	Hashes[i] = new AVL();
 	        }
-
+		this.size = tamanho;
 		this.Mult = multiMetodo;
 	    }
 	
 	// metodo de dispersao da MULTIPLICACAO
 	private int func_hash(int chave) {
-		double A = 0.6180339887;
-		return (int)(Hashes.length * (chave * A % 1));
+		 double A = 0.6180339887498948;
+		double prod = chave * A;
+    double frac = prod - (long )prod; // parte fracionária
+
+    return (int)(size * frac);
 		
 	}
 
@@ -71,7 +84,7 @@ public class Hash {
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
 		int indice = 0;
-		if(Mult = true){
+		if(Mult == true){
 			 indice = func_hash(intKey);
 		}else{
 			 indice = func_hash2(intKey);
@@ -88,7 +101,7 @@ public class Hash {
     public void remover(String word) {
 		int intKey = stringToIntHash(word);
 		int indice = 0;
-        if(Mult = true){
+        if(Mult == true){
 			 indice = func_hash(intKey);
 		}else{
 			 indice = func_hash2(intKey);

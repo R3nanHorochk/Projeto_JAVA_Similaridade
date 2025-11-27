@@ -1,2 +1,6 @@
 Arquivo 1,Arquivo 2,Similaridade
-doc4.txt,doc1.txt,0.4282
+doc4.txt,doc1.txt,0.4280
+doc5.txt,doc3.txt,0.0767
+teste1.txt,doc3.txt,0.0641
+doc1.txt,doc3.txt,0.0446
+doc5.txt,doc1.txt,0.0395

@@ -62,15 +62,15 @@ public class Documento {
         "mesmo", "mesma", "mesmos", "mesmas"
     };
 
-    public Documento(String arquivo) {
+    public Documento(String arquivo,boolean mode) {
         this.arquivo = arquivo;
-        this.hashtable = new Hash(26,true);
-        this.stopWordsHash = new Hash(26,true);
+        this.hashtable = new Hash(26,mode);
+        this.stopWordsHash = new Hash(26,mode);
         stopWordsStart();
     }
 
     public Documento() {
-        this(null);
+        this(null, true);
         stopWordsStart();
     }
     private void stopWordsStart() {
@@ -96,10 +96,30 @@ public class Documento {
 
     }
 
+    private int ColissionCount(List<String> wordsNormalized,boolean mult) {
+        Hash wordsFrequency = new Hash(26,mult);
+        int coli = 0;
+        
+        for(String word : wordsNormalized) {
+            Node node = hashtable.buscar(word);
+            if (node != null) {
+                coli = coli + 1;
+            } 
+        }
+        return coli;
+
+    }
+
     public Hash wordFrequency(String filePath , boolean mult) {
     	List<String> wordsNormalized = normalizeFile(filePath);
         wordFrequencyFile(wordsNormalized,mult);
         return hashtable ;
+    }
+
+    public int Col(String filePath , boolean mult) {
+    	List<String> wordsNormalized = normalizeFile(filePath);
+        int c = ColissionCount(wordsNormalized,mult);
+        return c ;
     }
 
     // NORMALIZA 1 ARQUIVO

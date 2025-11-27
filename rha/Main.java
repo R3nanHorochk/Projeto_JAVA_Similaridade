@@ -98,12 +98,16 @@ public class Main {
         int colisaoDiv = 0;
         for (File arquivo : arquivos) {
             String caminho = arquivo.getAbsolutePath();
-            Documento doc = new Documento(caminho);
+            Documento doc = new Documento(caminho,true);
+            Documento doc2 = new Documento(caminho,false);
             Hash hash = doc.wordFrequency(caminho,true);
              
-            Hash hash2 = doc.wordFrequency(caminho,true);
-            colisaoMult = colisaoMult + hash.getTotalColisoes(); 
-            colisaoDiv = colisaoDiv + hash2.getTotalColisoes();
+            Hash hash2 = doc2.wordFrequency(caminho,false);
+
+            int teste = doc.Col(caminho,true);
+            int teste2 = doc.Col(caminho,false);
+            colisaoMult = colisaoMult + hash.getTotalColisoes() ; 
+            colisaoDiv = colisaoDiv + hash2.getTotalColisoes() ;
             documentos.add(doc);
             hashes.add(hash);
             hash.setMult(false);
