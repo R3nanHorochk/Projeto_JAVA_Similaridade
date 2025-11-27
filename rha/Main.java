@@ -16,13 +16,15 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt");
-		Hash h1 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc1.txt" ) ;
+		Documento d1 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc3.txt");
+		Hash h1 = d1.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc3.txt" ) ;
 		//System.out.println(h1);
 
-		Documento d2 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt");
-		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc2.txt" ) ;
+		Documento d2 = new Documento("/workspaces/Projeto_JAVA_Similaridade/documentos/doc4.txt");
+		Hash h2 = d2.wordFrequency( "/workspaces/Projeto_JAVA_Similaridade/documentos/doc4.txt" ) ;
 		//System.out.println(h2);
+
+		System.out.printf("===VERIFICADOR DE SIMILARIDADE DE TEXTOS===");
 
 		double similarity = CompareTo.cosineSimilarity(h1, h2);
         System.out.printf("Similaridade: %.2f%%\n", similarity);

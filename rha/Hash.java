@@ -38,9 +38,9 @@ public class Hash {
 			hashValue = (hashValue * p) + word.charAt(i);
 			System.out.println("CHAR:" + word.charAt(i) + " valor:" + hashValue);
 		}
-		System.out.println("HASH VALUE:" + hashValue);
-		System.out.println("HASH VALUE2:" + (hashValue > 0 ? hashValue : -hashValue));
-		System.out.println("HASH VALUE2:" +  (hashValue > 0 ? hashValue : -hashValue));
+		//System.out.println("HASH VALUE:" + hashValue);
+		//System.out.println("HASH VALUE2:" + (hashValue > 0 ? hashValue : -hashValue));
+		//System.out.println("HASH VALUE2:" +  (hashValue > 0 ? hashValue : -hashValue));
 		return  (hashValue > 0 ? hashValue : -hashValue);
 	}
 	
@@ -61,11 +61,11 @@ public class Hash {
 
     public Node buscar(String word) {
 		int intKey = stringToIntHash(word);
-		System.out.println(intKey);
+		// System.out.println(intKey);
         int indice = func_hash(intKey);
-        System.out.println(indice + " - " + word + " - " + intKey);
+        //System.out.println(indice + " - " + word + " - " + intKey);
         WordData wd = new WordData(word,indice);
-        System.out.println( " --------------- ");
+        //System.out.println( " --------------- ");
         return Hashes[indice].search(wd);
        
     }
