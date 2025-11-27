@@ -16,7 +16,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 package rha;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class AVL extends BST {
 
@@ -236,6 +237,20 @@ public class AVL extends BST {
 	public void printTree() {
 	    System.out.println("Árvore AVL:");
 	    printTree(root, 0);
+	}
+	
+	public List<WordData> getAllData() {
+    List<WordData> result = new ArrayList<>();
+    inOrder(this.root, result);
+    return result;
+	}
+
+	private void inOrder(Node node, List<WordData> list) {
+    if (node == null) return;
+
+    inOrder(node.getLeft(), list);
+    list.add(node.getData());
+    inOrder(node.getRight(), list);
 	}
 
 	// Método recursivo auxiliar
